@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GIM-World &mdash; Geometry-Aware Implicit Memory for Video World Models</title>
+
+  <meta name="description" content="A geometry-aware implicit memory framework for long-horizon video world models.">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="static/css/style.css?v=19">
+</head>
+<body>
+
+<div class="page">
+
+  <!-- =================================================== TITLE / HERO -->
+  <header class="title-hero">
+    <video class="title-bg" src="static/videos/hero.mp4"
+           autoplay loop muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="title-veil" aria-hidden="true"></div>
+
+    <div class="title-inner">
+      <h1 class="wordmark"
+          aria-label="GIM-World: Geometry-Aware Implicit Memory for Video World Models">
+        <span class="wm-letter wm-g" aria-hidden="true">G</span><span class="wm-letter wm-i" aria-hidden="true">I</span><span class="wm-letter wm-m" aria-hidden="true">M</span><span class="wm-world" aria-hidden="true">World</span>
+      </h1>
+
+      <p class="title-sub" aria-hidden="true">
+        <span class="hi hi-g">G</span>eometry-Aware
+        <span class="hi hi-i">I</span>mplicit
+        <span class="hi hi-m">M</span>emory for Video World Models
+      </p>
+    </div>
+
+    <a class="scroll-hint" href="#long-horizon" aria-label="Scroll to results">&#8595;</a>
+  </header>
+
+  <!-- =================================================== TEASER -->
+  <section id="overview" class="flush">
+    <div class="sec-head">
+      <h2>Overview</h2>
+    </div>
+    <figure class="teaser">
+      <img src="static/images/teaser.webp"
+           alt="GIM-World teaser: long-horizon revisit, geometry-aware implicit memory">
+    </figure>
+  </section>
+
+  <!-- =================================================== LONG-HORIZON -->
+  <section id="long-horizon">
+    <div class="sec-head">
+      <h2>Results</h2>
+    </div>
+    <div class="long-grid">
+      <figure class="tile">
+        <video src="static/videos/long/long_1st_a.mp4?h=5"
+               autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="tile">
+        <video src="static/videos/long/long_1st_b.mp4?h=5"
+               autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="tile">
+        <video src="static/videos/long/long_1st_c.mp4?h=5"
+               autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="tile">
+        <video src="static/videos/long/long_3rd_b.mp4?h=5"
+               autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =================================================== COMPARISON -->
+  <section id="comparison">
+    <div class="sec-head">
+      <h2>Comparison with Baselines</h2>
+    </div>
+
+    <div class="cmp" data-cmp-grid>
+
+      <!-- 1st_30 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="1st_30" src="static/videos/compare/1st_30/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="1st_30" src="static/videos/compare/1st_30/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="1st_30" src="static/videos/compare/1st_30/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="1st_30" src="static/videos/compare/1st_30/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="1st_30" src="static/videos/compare/1st_30/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+      <!-- 1st_34 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="1st_34" src="static/videos/compare/1st_34/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="1st_34" src="static/videos/compare/1st_34/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="1st_34" src="static/videos/compare/1st_34/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="1st_34" src="static/videos/compare/1st_34/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="1st_34" src="static/videos/compare/1st_34/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+      <!-- 1st_43 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="1st_43" src="static/videos/compare/1st_43/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="1st_43" src="static/videos/compare/1st_43/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="1st_43" src="static/videos/compare/1st_43/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="1st_43" src="static/videos/compare/1st_43/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="1st_43" src="static/videos/compare/1st_43/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+      <!-- 1st_62 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="1st_62" src="static/videos/compare/1st_62/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="1st_62" src="static/videos/compare/1st_62/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="1st_62" src="static/videos/compare/1st_62/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="1st_62" src="static/videos/compare/1st_62/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="1st_62" src="static/videos/compare/1st_62/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+      <!-- 3rd_195 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="3rd_195" src="static/videos/compare/3rd_195/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="3rd_195" src="static/videos/compare/3rd_195/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="3rd_195" src="static/videos/compare/3rd_195/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="3rd_195" src="static/videos/compare/3rd_195/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="3rd_195" src="static/videos/compare/3rd_195/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+      <!-- 3rd_178 -->
+      <figure class="cmp-cell">
+        <figcaption class="lbl">FramePack</figcaption>
+        <video data-strip="3rd_178" src="static/videos/compare/3rd_178/framepack.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">Context-as-Memory</figcaption>
+        <video data-strip="3rd_178" src="static/videos/compare/3rd_178/cam.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell">
+        <figcaption class="lbl">SSM</figcaption>
+        <video data-strip="3rd_178" src="static/videos/compare/3rd_178/ssm.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-ours">
+        <figcaption class="lbl">GIM-World</figcaption>
+        <video data-strip="3rd_178" src="static/videos/compare/3rd_178/ours.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+      <figure class="cmp-cell is-gt">
+        <figcaption class="lbl">Ground&#8209;truth</figcaption>
+        <video data-strip="3rd_178" src="static/videos/compare/3rd_178/gt.mp4?h=5" autoplay loop muted playsinline preload="metadata"></video>
+      </figure>
+
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>GIM-World</span>
+    <span class="mono">project page &middot; built static</span>
+  </div>
+
+</div>
+
+<script defer src="static/js/main.js"></script>
+
+</body>
+</html>
