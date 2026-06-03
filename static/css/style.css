@@ -401,7 +401,6 @@ kbd {
 }
 .teaser figcaption {
   margin-top: 0.9rem;
-  max-width: var(--measure-text);
   color: var(--col-soft);
   font-size: 0.9rem;
   line-height: 1.65;
