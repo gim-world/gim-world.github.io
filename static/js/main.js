@@ -62,10 +62,12 @@
     });
   }
 
-  // Pause videos that are not in the viewport so background tabs and
-  // off-screen strips don't fight over decode threads. Resume when scrolled
-  // back in. Same logic for the 4 long-horizon tiles.
-  const all = document.querySelectorAll("video");
+  // Lazy-load + viewport gating. Grid/long videos ship with preload="none"
+  // and no autoplay, so nothing downloads until a tile nears the viewport.
+  // On intersect we call play(), which kicks off the fetch and decode; on
+  // exit we pause (the buffered data is kept, so scrolling back is instant).
+  // rootMargin starts loading ~300px before a tile actually enters view.
+  const all = document.querySelectorAll("video:not(.title-bg)");
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       for (const ent of entries) {
@@ -76,7 +78,11 @@
           v.pause();
         }
       }
-    }, { threshold: 0.15 });
+    }, { rootMargin: "300px 0px", threshold: 0.15 });
     all.forEach((v) => io.observe(v));
+  } else {
+    // No IntersectionObserver: fall back to playing everything (the browser
+    // will still stream lazily via the media element's own buffering).
+    all.forEach((v) => v.play().catch(() => {}));
   }
 })();
