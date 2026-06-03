@@ -399,6 +399,17 @@ kbd {
   height: auto;
   background: var(--bg-strong);
 }
+.teaser figcaption {
+  margin-top: 0.9rem;
+  max-width: var(--measure-text);
+  color: var(--col-soft);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.teaser figcaption strong {
+  color: var(--col);
+  font-weight: 600;
+}
 
 /* --------------------------------------------------------- section heads */
 
