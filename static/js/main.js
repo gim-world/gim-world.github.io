@@ -68,6 +68,16 @@
   // exit we pause (the buffered data is kept, so scrolling back is instant).
   // rootMargin starts loading ~300px before a tile actually enters view.
   const all = document.querySelectorAll("video:not(.title-bg)");
+
+  // Give every lazy video a lightweight poster (the matching first-frame jpg
+  // sitting next to the .mp4). Posters are ~20KB each, so they paint instantly
+  // and the heavy video stream swaps in behind them once it buffers.
+  all.forEach((v) => {
+    if (v.poster) return;
+    const s = v.getAttribute("src");
+    if (s) v.poster = s.replace(/\?.*$/, "").replace(/\.mp4$/, ".jpg");
+  });
+
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       for (const ent of entries) {
