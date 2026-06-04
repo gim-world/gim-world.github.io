@@ -454,6 +454,7 @@ kbd {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  position: relative;
 }
 
 .tile video,
@@ -503,6 +504,7 @@ kbd {
   flex-direction: column;
   gap: 0.45rem;
   min-width: 0;
+  position: relative;
 }
 
 .cmp-cell .lbl {
@@ -525,6 +527,27 @@ kbd {
 }
 .cmp-cell.is-ours video { border: 2px solid var(--accent); }
 .cmp-cell.is-gt   video { border: 2px solid var(--gt); }
+
+/* loading spinner shown while a clip is still buffering */
+.tile.is-loading::after,
+.cmp-cell.is-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 3px solid rgba(237, 237, 238, 0.22);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 @media (max-width: 720px) {
   .cmp { row-gap: 22px; column-gap: 3px; }

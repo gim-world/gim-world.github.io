@@ -21,20 +21,27 @@
     (strips[k] ||= []).push(v);
   }
 
+  // A strip is "ready" only when every member has enough buffered data to
+  // play smoothly (HAVE_FUTURE_DATA). We gate all time-alignment on this so
+  // we never seek videos while they are still buffering — that mid-load
+  // re-anchoring is what made the first frames jump back and forth.
+  const STRIP_READY = 3; // HTMLMediaElement.HAVE_FUTURE_DATA
+  function stripReady(arr) {
+    return arr.every((v) => v.readyState >= STRIP_READY);
+  }
+
   // Re-anchor every follower in a strip to the leader's currentTime when
-  // drift exceeds the threshold. Browsers can desync the videos slowly,
-  // especially with autoplay-loop and tab visibility changes.
+  // drift exceeds the threshold. Only runs once the whole strip is buffered.
   const DRIFT_S = 0.18;
   setInterval(function () {
     for (const k in strips) {
       const arr = strips[k];
       if (arr.length < 2) continue;
       const leader = arr[0];
-      if (leader.paused || leader.readyState < 2) continue;
+      if (leader.paused || !stripReady(arr)) continue;
       const t = leader.currentTime;
       for (let i = 1; i < arr.length; i++) {
         const v = arr[i];
-        if (v.readyState < 2) continue;
         const dt = v.currentTime - t;
         if (Math.abs(dt) > DRIFT_S) {
           try { v.currentTime = t; } catch (e) { /* noop */ }
@@ -43,20 +50,18 @@
     }
   }, 1500);
 
-  // When any video stalls and resumes (network blip, tab switched out and
-  // back in), kick the rest of the strip to follow it.
+  // When the leader (re)starts, snap the rest of the strip to it — but only
+  // if the strip is fully buffered, so we don't fight the loaders.
   for (const k in strips) {
     const arr = strips[k];
     arr.forEach((v) => {
       v.addEventListener("playing", () => {
-        if (v !== arr[0]) return;
+        if (v !== arr[0] || !stripReady(arr)) return;
         const t = v.currentTime;
         for (let i = 1; i < arr.length; i++) {
           const o = arr[i];
-          if (o.readyState >= 2) {
-            try { o.currentTime = t; } catch (e) { /* noop */ }
-            o.play().catch(() => {});
-          }
+          try { o.currentTime = t; } catch (e) { /* noop */ }
+          o.play().catch(() => {});
         }
       });
     });
@@ -78,11 +83,26 @@
     if (s) v.poster = s.replace(/\?.*$/, "").replace(/\.mp4$/, ".jpg");
   });
 
+  // Loading spinner: toggle .is-loading on the enclosing <figure> while the
+  // clip is fetching/buffering, clear it once it can play.
+  function setLoading(v, on) {
+    const fig = v.closest("figure");
+    if (fig) fig.classList.toggle("is-loading", on);
+  }
+  all.forEach((v) => {
+    v.addEventListener("waiting", () => setLoading(v, true));
+    v.addEventListener("stalled", () => setLoading(v, true));
+    v.addEventListener("canplay", () => setLoading(v, false));
+    v.addEventListener("playing", () => setLoading(v, false));
+    v.addEventListener("error", () => setLoading(v, false));
+  });
+
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       for (const ent of entries) {
         const v = ent.target;
         if (ent.isIntersecting) {
+          if (v.readyState < STRIP_READY) setLoading(v, true);
           v.play().catch(() => {});
         } else {
           v.pause();
