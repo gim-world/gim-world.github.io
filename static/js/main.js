@@ -1,9 +1,9 @@
-/* GIM-World project page – minimal interactivity.
+/* GIM-World project page – click-to-play playback.
  *
- * Per-strip synchronized playback for the comparison grid. Each <video>
- * with the same data-strip="..." is treated as one strip; the first video
- * in the strip is the leader, the rest re-anchor to its currentTime
- * whenever they drift more than 180ms. No controls, no switcher.
+ * Nothing streams on load. Every clip shows its poster plus a play button.
+ *   - Results tiles play individually.
+ *   - Comparison videos sharing data-strip="..." play as one row: clicking
+ *     any button in the row starts all five and keeps them time-aligned.
  *
  * No frameworks, no build step.
  */
@@ -11,27 +11,25 @@
   "use strict";
 
   const grid = document.querySelector("[data-cmp-grid]");
-  if (!grid) return;
 
   /** @type {Record<string, HTMLVideoElement[]>} */
   const strips = {};
-  for (const v of grid.querySelectorAll("video[data-strip]")) {
-    const k = v.getAttribute("data-strip");
-    if (!k) continue;
-    (strips[k] ||= []).push(v);
+  if (grid) {
+    for (const v of grid.querySelectorAll("video[data-strip]")) {
+      const k = v.getAttribute("data-strip");
+      if (!k) continue;
+      (strips[k] ||= []).push(v);
+    }
   }
 
-  // A strip is "ready" only when every member has enough buffered data to
-  // play smoothly (HAVE_FUTURE_DATA). We gate all time-alignment on this so
-  // we never seek videos while they are still buffering — that mid-load
-  // re-anchoring is what made the first frames jump back and forth.
+  // A strip is "ready" only when every member has buffered enough to play
+  // smoothly. Time-alignment is gated on this so we never seek a clip while
+  // it is still buffering (that mid-load re-anchoring caused the jitter).
   const STRIP_READY = 3; // HTMLMediaElement.HAVE_FUTURE_DATA
   function stripReady(arr) {
     return arr.every((v) => v.readyState >= STRIP_READY);
   }
 
-  // Re-anchor every follower in a strip to the leader's currentTime when
-  // drift exceeds the threshold. Only runs once the whole strip is buffered.
   const DRIFT_S = 0.18;
   setInterval(function () {
     for (const k in strips) {
@@ -50,8 +48,6 @@
     }
   }, 1500);
 
-  // When the leader (re)starts, snap the rest of the strip to it — but only
-  // if the strip is fully buffered, so we don't fight the loaders.
   for (const k in strips) {
     const arr = strips[k];
     arr.forEach((v) => {
@@ -67,29 +63,53 @@
     });
   }
 
-  // Lazy-load + viewport gating. Grid/long videos ship with preload="none"
-  // and no autoplay, so nothing downloads until a tile nears the viewport.
-  // On intersect we call play(), which kicks off the fetch and decode; on
-  // exit we pause (the buffered data is kept, so scrolling back is instant).
-  // rootMargin starts loading ~300px before a tile actually enters view.
   const all = document.querySelectorAll("video:not(.title-bg)");
 
-  // Give every lazy video a lightweight poster (the matching first-frame jpg
-  // sitting next to the .mp4). Posters are ~20KB each, so they paint instantly
-  // and the heavy video stream swaps in behind them once it buffers.
+  // Lightweight poster (matching first-frame jpg next to the .mp4) so the
+  // tile shows real content before anything streams.
   all.forEach((v) => {
     if (v.poster) return;
     const s = v.getAttribute("src");
     if (s) v.poster = s.replace(/\?.*$/, "").replace(/\.mp4$/, ".jpg");
   });
 
-  // Loading spinner: toggle .is-loading on the enclosing <figure> while the
-  // clip is fetching/buffering, clear it once it can play.
+  // Wrap each video so the play button and spinner anchor to the clip itself
+  // (not the caption above it). Then attach a play button.
+  const activated = new WeakSet();
+
   function setLoading(v, on) {
-    const fig = v.closest("figure");
-    if (fig) fig.classList.toggle("is-loading", on);
+    const w = v.parentElement;
+    if (w && w.classList.contains("vwrap")) w.classList.toggle("is-loading", on);
   }
+
+  function groupOf(v) {
+    const k = v.getAttribute("data-strip");
+    return (k && strips[k]) ? strips[k] : [v];
+  }
+
+  function startGroup(arr) {
+    arr.forEach((v) => {
+      activated.add(v);
+      const w = v.parentElement;
+      if (w) w.classList.add("is-playing");
+      if (v.readyState < STRIP_READY) setLoading(v, true);
+      v.play().catch(() => {});
+    });
+  }
+
   all.forEach((v) => {
+    const wrap = document.createElement("div");
+    wrap.className = "vwrap";
+    v.parentNode.insertBefore(wrap, v);
+    wrap.appendChild(v);
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "playbtn";
+    btn.setAttribute("aria-label", "Play");
+    btn.addEventListener("click", () => startGroup(groupOf(v)));
+    wrap.appendChild(btn);
+
     v.addEventListener("waiting", () => setLoading(v, true));
     v.addEventListener("stalled", () => setLoading(v, true));
     v.addEventListener("canplay", () => setLoading(v, false));
@@ -97,22 +117,20 @@
     v.addEventListener("error", () => setLoading(v, false));
   });
 
+  // Pause activated clips when scrolled off-screen; resume when scrolled back.
+  // Clips the user never started stay paused on their poster.
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       for (const ent of entries) {
         const v = ent.target;
+        if (!activated.has(v)) continue;
         if (ent.isIntersecting) {
-          if (v.readyState < STRIP_READY) setLoading(v, true);
           v.play().catch(() => {});
         } else {
           v.pause();
         }
       }
-    }, { rootMargin: "300px 0px", threshold: 0.15 });
+    }, { rootMargin: "200px 0px", threshold: 0.1 });
     all.forEach((v) => io.observe(v));
-  } else {
-    // No IntersectionObserver: fall back to playing everything (the browser
-    // will still stream lazily via the media element's own buffering).
-    all.forEach((v) => v.play().catch(() => {}));
   }
 })();
