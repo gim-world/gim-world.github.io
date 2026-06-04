@@ -10,6 +10,21 @@
 (function () {
   "use strict";
 
+  // The hero background video should always play on its own. Autoplay can be
+  // throttled (poster shown, tab restored, power-saving), so kick it.
+  const hero = document.querySelector("video.title-bg");
+  if (hero) {
+    const kickHero = () => { hero.play().catch(() => {}); };
+    kickHero();
+    hero.addEventListener("canplay", kickHero, { once: true });
+    hero.addEventListener("loadeddata", kickHero, { once: true });
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) kickHero();
+    });
+    // Last resort if the browser blocks muted autoplay until a gesture.
+    window.addEventListener("pointerdown", kickHero, { once: true });
+  }
+
   const grid = document.querySelector("[data-cmp-grid]");
 
   /** @type {Record<string, HTMLVideoElement[]>} */
